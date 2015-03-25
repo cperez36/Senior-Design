@@ -1,0 +1,36 @@
+// This is preliminary code before we obtain an external clock
+
+
+int DigitalOutput = 7;
+int Sensor = 4; //analog for motion detector, digital for switch or button
+unsigned long time = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(DigitalOutput,OUTPUT);
+  pinMode(Sensor,INPUT);
+}
+
+void stepper1(int seconds)
+{
+  time = millis();
+  while (millis()<time+seconds*1000)//Can adjust the time it waits for motion
+  {
+    if (digitalRead(Sensor) == HIGH) // if analog, replace with if (analogRead(Sensor) < threshold) which needs to be calibrated
+    {
+      for(int i = 0; i<15; i++)
+      {
+        digitalWrite(DigitalOutput,HIGH);
+        delay(20);
+        digitalWrite(DigitalOutput,LOW);
+        delay(20);
+      }
+      break;
+    }
+  }
+}
+
+void loop() {
+  //delay(60 * 1000); //can adjust the time between openings for motion
+  stepper1(60);
+}
